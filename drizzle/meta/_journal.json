@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1789004420074,
+      "tag": "0000_warm_ironclad",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1789006581076,
+      "tag": "0001_illegal_payback",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1789430876930,
+      "tag": "0002_useful_omega_flight",
+      "breakpoints": true
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+export type ReportBill={number:string;period:string;due:string;amount:number;overdue?:boolean};
+export type ReportItem={id:string;provider:string;account:string;property:string;province:string;city:string;status:'ok'|'error'|'unsupported';message:string;bills:ReportBill[];total:number|null;source:string};
+export type DebtReport={id:string;groupId:string;name:string;created:string;items:ReportItem[];originals?:{number:string;provider:string;key:string}[];originalsMissing?:{number:string;provider:string;reason:string}[];originalsPdfKey?:string};
+export const providerNames:Record<string,string>={gas:'Camuzzi',agua:'Aguas Rionegrinas',luz:'EdERSA',rentas:'Rentas Río Negro',municipio:'Municipalidad de Roca - Tasas',comercio:'Municipalidad de Roca - Comercio',otras:'Otras tasas',personalizado:'Otro organismo'};

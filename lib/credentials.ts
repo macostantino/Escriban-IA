@@ -1,0 +1,5 @@
+import {env} from 'cloudflare:workers';
+import {openCredentials,sealCredentials} from './credential-crypto';
+function secret(){const value=(env as unknown as Record<string,string>).CREDENTIALS_ENCRYPTION_KEY;if(!value)throw Error('Credential storage unavailable');return value}
+export async function readCredentials(owner:string){if(!env.DB)throw Error('Database unavailable');const row=await env.DB.prepare('SELECT encrypted,updated FROM credentials WHERE owner=?').bind(owner).first<{encrypted:string;updated:string}>();if(!row)return null;return {...await openCredentials(row.encrypted,owner,secret()),updated:row.updated}}
+export async function saveCredentials(owner:string,value:{email:string;password:string}){if(!env.DB)throw Error('Database unavailable');const updated=new Date().toISOString();const encrypted=await sealCredentials(value,owner,secret());await env.DB.prepare('INSERT INTO credentials(owner,encrypted,updated) VALUES(?,?,?) ON CONFLICT(owner) DO UPDATE SET encrypted=excluded.encrypted,updated=excluded.updated').bind(owner,encrypted,updated).run();return {email:value.email,configured:true,updated}}

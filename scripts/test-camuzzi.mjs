@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {parseCamuzzi} from '../lib/camuzzi.ts';
+const account='83320230100618604';
+const bill={NumeroFactura:'TEST',fecha_vencimiento:'2026-09-23',importe:'26527.78',texto1:'05/26',factura_vencida:false};
+const raw={SuministroExiste:true,Suministros:[{CuentaUnificada:account,EstadoDescripcion:'Situación Correcta',Facturas:[bill,{...bill,NumeroFactura:'HIDDEN',MOSTRARLIQ2:'N'}]}]};
+assert.equal(parseCamuzzi(raw,account).total,26527.78);
+assert.equal(parseCamuzzi(raw,account).bills.length,1);
+assert.equal(parseCamuzzi(raw,account).bills[0].overdue,false);
+assert.throws(()=>parseCamuzzi(raw,'00000000000000000'));
+assert.throws(()=>parseCamuzzi({...raw,Suministros:[{...raw.Suministros[0],Facturas:[{...bill,importe:'garbage'}]}]},account));
+assert.throws(()=>parseCamuzzi({},account));
+console.log('Camuzzi: total, hidden invoice exclusion, status, account matching and malformed data checks passed.');
+const history={...raw,Suministros:[{...raw.Suministros[0],Facturas:[{...bill,NumeroFactura:'OLD',fecha_vencimiento:'2000-01-01',factura_vencida:true},{...bill,NumeroFactura:'FUTURE',fecha_vencimiento:'2099-12-31'}]}]};
+assert.equal(parseCamuzzi(history,account).bills.length,2);
+assert.equal(parseCamuzzi(history,account).total,53055.56);
+console.log('No date range: both old overdue and future outstanding invoices included.');
