@@ -50,6 +50,8 @@ export function sites(): Plugin {
           }
         }
 
+        rewriteCodespacesRequest(request);
+
         let authority: URL;
         let url: URL;
         try {
@@ -187,6 +189,31 @@ export function sites(): Plugin {
       }
     },
   };
+}
+
+// GitHub Codespaces forwards the dev port through a private, GitHub-authenticated
+// https://<codespace>-<port>.<domain> URL. Only requests for this codespace's own
+// forwarded host (and same-origin, when an Origin is sent) are mapped back to
+// localhost; the loopback socket check still applies afterwards.
+function rewriteCodespacesRequest(request: IncomingMessage): void {
+  const name = process.env.CODESPACE_NAME;
+  const domain = process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN;
+  if (process.env.CODESPACES !== "true" || !name || !domain) return;
+
+  const host = (request.headers.host ?? "").toLowerCase();
+  const prefix = `${name.toLowerCase()}-`;
+  const suffix = `.${domain.toLowerCase()}`;
+  if (!host.startsWith(prefix) || !host.endsWith(suffix)) return;
+  const port = host.slice(prefix.length, host.length - suffix.length);
+  if (!/^\d{1,5}$/.test(port)) return;
+
+  const origin = request.headers.origin;
+  if (origin !== undefined && origin !== `https://${host}`) return;
+
+  setHeader(request, "host", `localhost:${port}`);
+  if (origin !== undefined) {
+    setHeader(request, "origin", `http://localhost:${port}`);
+  }
 }
 
 function removeHeader(request: IncomingMessage, name: string): void {

@@ -15,6 +15,11 @@ Abrir http://localhost:5173. El plugin local permite ingresar como `local_seedy`
 
 Configurar correo y contraseña de EdERSA en la pantalla de credenciales. Alternativamente el servidor admite `EDERSA_EMAIL` y `EDERSA_PASSWORD` en `.dev.vars`. Camuzzi no necesita esas credenciales. Las consultas reales requieren Internet y dependen de los portales oficiales. El código de EdERSA puede asociar automáticamente el NIS a la cuenta configurada.
 
+## Ejecutar desde GitHub (Codespaces)
+En GitHub: botón **Code → Codespaces → Create codespace on main**. La primera vez instala dependencias y prepara D1 local (`.devcontainer/devcontainer.json`); luego `npm run dev` arranca solo y se abre el puerto 5173 "Libredeuda". Si no se abre, pestaña **Ports** → abrir 5173. Mantener el puerto como **Private** (valor por defecto): solo el dueño del codespace puede acceder con su cuenta de GitHub.
+
+El inicio de sesión local funciona en la dirección `https://<codespace>-5173.app.github.dev` de ese mismo codespace; otras direcciones siguen rechazadas. Los datos y la clave de `.dev.vars` viven dentro del codespace: se conservan al detenerlo, pero se pierden al eliminarlo. Codespaces se detiene tras un período de inactividad y consume horas de la cuota gratuita de GitHub.
+
 ## Comprobaciones
 ```sh
 node scripts/verify-export.mjs
