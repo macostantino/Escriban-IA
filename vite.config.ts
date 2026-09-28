@@ -11,6 +11,12 @@ const { d1, r2 } = hostingConfig;
 // macOS Seatbelt blocks FSEvents, so Codex previews need polling for HMR.
 const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
 
+// GitHub Codespaces serves the dev port at https://<codespace>-<port>.<domain>.
+const codespacesDomain =
+  process.env.CODESPACES === "true"
+    ? process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN
+    : undefined;
+
 const localBindingConfig = {
   main: "vinext/server/fetch-handler",
   compatibility_flags: ["nodejs_compat"],
@@ -49,9 +55,14 @@ export default defineConfig(async () => {
   const { cloudflare } = await import("@cloudflare/vite-plugin");
 
   return {
-    server: isCodexSeatbeltSandbox
-      ? { watch: { useFsEvents: false, usePolling: true } }
-      : undefined,
+    server: {
+      ...(isCodexSeatbeltSandbox
+        ? { watch: { useFsEvents: false, usePolling: true } }
+        : {}),
+      ...(codespacesDomain
+        ? { allowedHosts: [`.${codespacesDomain}`], hmr: { clientPort: 443 } }
+        : {}),
+    },
     plugins: [
       vinext(),
       sites(),
