@@ -8,7 +8,7 @@ type Supply={id:string;groupId?:string|null;provider:string;account:string;prope
 const providers:Record<string,{name:string;label:string;url:string;help:string}>={
 personalizado:{name:'Otro prestador u organismo',label:'Servicio, tasa o impuesto',url:'',help:'Consulta asistida: usá el portal oficial del organismo indicado y registrá el resultado. No hay conexión automática configurada.'},
 gas:{name:'Camuzzi',label:'Gas natural',url:'https://oficinavirtual.camuzzigas.com.ar/busqueda-suministro',help:'Cuenta de 17 dígitos. Consultá la deuda y visualizá las facturas en el portal.'},
-agua:{name:'Aguas Rionegrinas',label:'Agua y cloacas',url:'https://oficinavirtual.live/apps/deuda/inicio',help:'Usá el número de cuenta de tu factura.'},
+agua:{name:'Aguas Rionegrinas',label:'Agua y cloacas',url:'https://oficinavirtual.live/apps/launcher/index.html?20240604151222&entorno=arsa#/',help:'Usá el número de cuenta de tu factura.'},
 luz:{name:'EdERSA',label:'Energía eléctrica',url:'https://tramites.edersa.com.ar/OFICINA_VIRTUAL_PROD_EDERSA/servlet/com.oficinavirtual.login',help:'NIS de 11 dígitos. La app ingresa con la cuenta configurada y consulta las facturas pendientes.'},
 rentas:{name:'Rentas Río Negro',label:'Impuesto inmobiliario',url:'https://siatwagencia.rionegro.gov.ar/cdws/consultaDeudaInmobiliarioRN',help:'Partida o nomenclatura catastral. Completá el código de seguridad del portal.'},
 municipio:{name:'Municipalidad de Roca',label:'Tasas retributivas',url:'https://serviciosweb.generalroca.gob.ar/servicios/contribuyentes/consulta-deuda/inmueble',help:'Partida o nomenclatura. Requiere verificación. Revisá vigentes, vencidas y deuda en legales.'},
